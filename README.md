@@ -31,6 +31,26 @@ val (xCG, xDense) = IterSolve.compareDense A b
 (* |xCG[i] - xDense[i]| < 1e-6 for well-conditioned systems *)
 ```
 
+## Example
+
+`make example` builds and runs [`examples/demo.sml`](examples/demo.sml), which
+runs a sparse matrix-vector product, solves two small SPD systems with
+Conjugate Gradient (both a single partial iteration and to convergence), and
+cross-checks the converged CG solution against a dense LU solve (output is
+byte-identical under MLton and Poly/ML):
+
+```
+Sparse SPD system A x = b, A = [[4,1,0],[1,3,1],[0,1,2]], b = [1,2,3]:
+  spmv A [1,1,1]      = [5.0000, 5.0000, 3.0000]
+  CG after 1 iter     = [0.2800, 0.5600, 0.8400]
+  CG (converged)      = [0.2222, 0.1111, 1.4444]
+  dense LU solve      = [0.2222, 0.1111, 1.4444]
+
+Smaller SPD system, A = [[4,1],[1,3]], b = [1,2]:
+  CG (converged)      = [0.0909, 0.6364]
+  dense LU solve      = [0.0909, 0.6364]
+```
+
 ## Known limitations
 
 - **CG only applies to SPD matrices**: passing a non-symmetric or indefinite
@@ -60,6 +80,7 @@ lib/github.com/sjqtentacles/sml-itersolve/itersolve.mlb
 make test        # MLton
 make test-poly   # Poly/ML
 make all-tests   # both
+make example     # build + run the demo
 make clean
 ```
 
